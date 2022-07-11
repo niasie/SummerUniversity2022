@@ -98,7 +98,7 @@ void copy_to_device(T* from, T* to, size_t n) {
 template <typename T>
 void copy_to_host(T* from, T* to, size_t n) {
     auto status = cudaMemcpy(to, from, n*sizeof(T), cudaMemcpyDeviceToHost);
-    cuda_check_status(status)
+    cuda_check_status(status);
 }
 
 // copy n*T from host to device
