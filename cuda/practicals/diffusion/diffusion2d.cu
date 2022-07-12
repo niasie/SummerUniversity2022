@@ -19,8 +19,8 @@ void write_to_file(int nx, int ny, double* data);
 
 __global__
 void diffusion(double *x0, double *x1, int nx, int ny, double dt) {
-    int i = blockIdx.x * blockIdx.x + threadIdx.x
-    int j = blockIdx.y * blockIdx.y + threadIdx.y
+    int i = blockIdx.x * blockIdx.x + threadIdx.x;
+    int j = blockIdx.y * blockIdx.y + threadIdx.y;
 
     if (i < nx && j < ny) {
         x1[i + j * nx] = x0[i + j * nx] + dt * (-4.*x0[i + j * nx]
