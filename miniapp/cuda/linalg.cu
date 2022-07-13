@@ -108,7 +108,7 @@ double ss_norm2(Field const& x)
     double result = 0;
     const int n = x.length();
 
-    result = ss_dot(x, x);
+    result = sqrt(ss_dot(x, x));
 
     return result;
 }
