@@ -186,6 +186,12 @@ void ss_scaled_diff(Field& y, const double alpha, Field const& l, Field const& r
 // y and x are vectors
 void ss_scale(Field& y, const double alpha, Field& x)
 {
+
+    const int n = y.length();
+    auto handle = cublas_handle();
+
+    cublasDcopy(handle, n, x.device_data(), 1, y.device_data(), 1);
+    cublasDscal(handle, n, &alpha, y.device_data(), 1);
 }
 
 // computes linear combination of two vectors y := alpha*x + beta*z
