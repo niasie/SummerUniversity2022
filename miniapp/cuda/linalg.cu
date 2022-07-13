@@ -177,7 +177,7 @@ void ss_scaled_diff(Field& y, const double alpha, Field const& l, Field const& r
 
     double neg_alpha = -alpha;
     cublasDcopy(handle, n, r.device_data(), 1, y.device_data(), 1);
-    cublasDscal(handle, n, &neg_alpha, y.device_data());
+    cublasDscal(handle, n, &neg_alpha, y.device_data(), 1);
     cublasDaxpy(handle, n, &alpha, l.device_data(), 1, y.device_data(), 1);
 }
 
