@@ -10,6 +10,7 @@
 #include "operators.h"
 #include "stats.h"
 #include "data.h"
+#include "cuda_helpers.h"
 
 namespace linalg {
 
@@ -90,6 +91,9 @@ double ss_dot(Field const& x, Field const& y)
 {
     double result = 0.;
     const int n = x.length();
+
+    auto cublas_handler = cublas_handle();
+    cublasDdot(cublas_handler, n, x.device_data(), 1, y.device_data(), 1, result);
 
     return result;
 }
