@@ -153,6 +153,7 @@ void ss_copy(Field& y, Field const& x)
 // value is a scalar
 void ss_fill(Field& x, const double value)
 {
+
 }
 
 // computes y := alpha*x + y
@@ -160,6 +161,12 @@ void ss_fill(Field& x, const double value)
 // alpha is a scalar
 void ss_axpy(Field& y, const double alpha, Field const& x)
 {
+    const int n = y.length();
+    auto handle = cublas_handle();
+
+    cublasDaxpy(handle, n, &alpha, x.device_data(), 1, y.device_data(), 1);
+
+    return y;
 }
 
 // computes y = alpha*(l-r)
@@ -167,6 +174,13 @@ void ss_axpy(Field& y, const double alpha, Field const& x)
 // alpha is a scalar
 void ss_scaled_diff(Field& y, const double alpha, Field const& l, Field const& r)
 {
+    const int n = y.length();
+    auto handle = cublas_handle();
+
+    double neg_alpha = -alpha;
+    cublasDcopy(handle, n, r.device_data()), 1, y.device_data(), 1);
+    cublasDscal(handle, n, &neg_alpha, y.device_data());
+    cublasDaxpy(handle, n, &alpha, l.device_data(), 1, y.device_data(), 1);
 }
 
 // computes y := alpha*x
