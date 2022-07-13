@@ -93,7 +93,7 @@ double ss_dot(Field const& x, Field const& y)
     const int n = x.length();
 
     auto cublas_handler = cublas_handle();
-    cublasDdot(cublas_handler, n, x.device_data(), 1, y.device_data(), 1, result);
+    cublasDdot(cublas_handler, n, x.device_data(), 1, y.device_data(), 1, &result);
 
     return result;
 }
