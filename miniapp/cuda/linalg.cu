@@ -41,10 +41,10 @@ void copy(double *y, const double* x, int n) {
 }
 
 __global__
-void fill(double *y, const double alpha, int n) {
+void fill(double *y, const double value, int n) {
     auto i = threadIdx.x + blockDim.x*blockIdx.x;
     if (i < n) {
-        y[i] *= alpha;
+        y[i] = value;
     }
 }
 } // namespace kernels
@@ -165,7 +165,7 @@ void ss_fill(Field& x, const double value)
     auto grid_dim = calculate_grid_dim(block_dim, n);
 
     kernels::fill<<<grid_dim, block_dim>>>
-        (x.device_data(), alpha, n);
+        (x.device_data(), value, n);
 
 }
 
