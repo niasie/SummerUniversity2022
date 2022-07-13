@@ -120,7 +120,7 @@ class Field {
     }
 
     void update_device() {
-        auto status = cudaMemcpy(device_data(), host_data(), length() * sizeof(dobuble), cudaMemcpyHostToDevice);
+        auto status = cudaMemcpy(device_data(), host_data(), length() * sizeof(double), cudaMemcpyHostToDevice);
         cuda_check_status(status);
     }
 
