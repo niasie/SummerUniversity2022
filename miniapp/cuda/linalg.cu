@@ -165,7 +165,7 @@ void ss_fill(Field& x, const double value)
     auto grid_dim = calculate_grid_dim(block_dim, n);
 
     kernels::fill<<<grid_dim, block_dim>>>
-        (y.device_data(), alpha, n);
+        (x.device_data(), alpha, n);
 
 }
 
