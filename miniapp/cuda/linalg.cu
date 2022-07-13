@@ -41,10 +41,10 @@ void copy(double *y, const double* x, int n) {
 }
 
 __global__
-void fill(double *y, double alpha, int n) {
+void fill(double *y, const double alpha, int n) {
     auto i = threadIdx.x + blockDim.x*blockIdx.x;
     if (i < n) {
-        y[i] *= alpha
+        y[i] *= alpha;
     }
 }
 } // namespace kernels
