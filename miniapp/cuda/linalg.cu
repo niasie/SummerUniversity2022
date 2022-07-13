@@ -212,6 +212,12 @@ void ss_scale(Field& y, const double alpha, Field& x)
 // y, x and z are vectors
 void ss_lcomb(Field& y, const double alpha, Field& x, const double beta, Field const& z)
 {
+    const int n = y.length();
+    auto handle = cublas_handle();
+
+    cublasDcopy(handle, n, z.device_data(), 1, y.device_data(), 1);
+    cublasDscal(handle, n, &beta, y.device_data(), 1);
+    cublasDaxpy(handle, n, &alpha, x.device_data(), 1, y.device_data(), 1);
 }
 
 // conjugate gradient solver
