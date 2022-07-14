@@ -93,7 +93,7 @@ subroutine blur_twice_gpu_nocopies(nsteps, n, in, out)
   allocate(buffer(n))
 
   ! TODO: Copy necessary data to the GPU here
-  !$acc enter data copy(in, out, buffer)
+  !$acc enter data copyin(in, out, buffer)
   do istep = 1,nsteps
      ! TODO: Offload this loop to the GPU
      !$acc parallel loop present(in, buffer)
@@ -113,7 +113,7 @@ subroutine blur_twice_gpu_nocopies(nsteps, n, in, out)
         in(i) = out(i)
      enddo
   enddo
-  !$acc exit data copy(in, out, buffer)
+  !$acc exit data copyout(in, out, buffer)
 
   deallocate(buffer)
 end subroutine blur_twice_gpu_nocopies
