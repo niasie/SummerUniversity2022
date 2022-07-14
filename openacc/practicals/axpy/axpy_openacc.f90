@@ -56,7 +56,7 @@ program main
 
   copyin_start = get_time()
   ! TODO: Copy data to the GPU
-  !$acc data copyin(x,y)
+  !$acc data copy(x,y)
   time_copyin = get_time() - copyin_start
 
   axpy_start = get_time()
@@ -65,7 +65,7 @@ program main
 
   copyout_start = get_time()
   ! TODO: Copy out data from the GPU
-  !$acc data copyout(x,y)
+  !$acc end data
   time_copyout = get_time() - copyout_start
   
   print *, '-------'
