@@ -22,6 +22,7 @@ subroutine axpy_gpu(n, alpha, x, y)
   integer i
 
   ! TODO: Offload this loop to the GPU
+  !$acc parallel for copy(x[0:n],y[0:n])
   do i = 1,n
      y(i) = y(i) + alpha*x(i)
   enddo
