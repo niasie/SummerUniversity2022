@@ -1,5 +1,6 @@
 real(kind(0d0)) function blur(pos, u, n)
   ! TODO: Declare as OpenACC routine accordingly
+  !$acc routine
   integer, intent(in) :: pos, n
   real(kind(0d0)), intent(in) :: u(n)
 
@@ -50,21 +51,25 @@ subroutine blur_twice_gpu_naive(nsteps, n, in, out)
   real(kind(0d0)), dimension(:), allocatable :: buffer
   real(kind(0d0)), external :: blur
   ! TODO: Declare as OpenACC routine accordingly
+  !$acc routine
 
   allocate(buffer(n))
 
   do istep = 1,nsteps
      ! TODO: Offload this loop to the GPU
+    !$acc parallel loop copy(in, buffer)
      do i = 2,n-1
         buffer(i) = blur(i, in, n)
      enddo
 
      ! TODO: Offload this loop to the GPU
+     !$acc parallel loop copy(buffer, out)
      do i = 3,n-2
         out(i) = blur(i, buffer, n)
      enddo
 
      ! TODO: Offload this loop to the GPU
+     !$acc parallel loop copy(in, out)
      do i = 1,n
         in(i) = out(i)
      enddo
@@ -83,22 +88,27 @@ subroutine blur_twice_gpu_nocopies(nsteps, n, in, out)
   real(kind(0d0)), dimension(:), allocatable :: buffer
   real(kind(0d0)), external :: blur
   ! TODO: Declare as OpenACC routine accordingly
+  !$acc routine
 
   allocate(buffer(n))
 
   ! TODO: Copy necessary data to the GPU here
+  !$acc data copy(in, out, bugger)
   do istep = 1,nsteps
      ! TODO: Offload this loop to the GPU
+     !$acc parallel loop present(in, buffer)
      do i = 2,n-1
         buffer(i) = blur(i, in, n)
      enddo
 
      ! TODO: Offload this loop to the GPU
+     !$acc parallel loop present(buffer, out)
      do i = 3,n-2
         out(i) = blur(i, buffer, n)
      enddo
 
      ! TODO: Offload this loop to the GPU
+     !$acc parallel loop present(in, out)
      do i = 1,n
         in(i) = out(i)
      enddo
