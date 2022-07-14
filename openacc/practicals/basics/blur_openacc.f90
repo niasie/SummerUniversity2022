@@ -51,7 +51,7 @@ subroutine blur_twice_gpu_naive(nsteps, n, in, out)
   real(kind(0d0)), dimension(:), allocatable :: buffer
   real(kind(0d0)), external :: blur
   ! TODO: Declare as OpenACC routine accordingly
-  !$acc routine
+  !$acc routine seq
 
   allocate(buffer(n))
 
@@ -88,7 +88,7 @@ subroutine blur_twice_gpu_nocopies(nsteps, n, in, out)
   real(kind(0d0)), dimension(:), allocatable :: buffer
   real(kind(0d0)), external :: blur
   ! TODO: Declare as OpenACC routine accordingly
-  !$acc routine
+  !$acc routine seq
 
   allocate(buffer(n))
 
