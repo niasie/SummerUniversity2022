@@ -6,6 +6,7 @@ subroutine dotprod_gpu(n, x, y, res)
 
   res = 0
   ! TODO: Offload this loop to the GPU
+  !$acc parallel loop reduction(+:res) copy(x, y)
   do i = 1,n
      res = res + x(i)*y(i)
   enddo
