@@ -4,12 +4,12 @@
 #include <iostream>
 
 #define NO_CUDA
-#include "util.h"
+#include "util.h" buffer
 
 #ifdef _OPENACC
 // TODO: Annotate the following function accordingly in order to be called from
 //       an OpenACC kernel context
-#pragma acc routine
+#pragma acc kernels
 #endif
 double blur(int pos, const double *u) {
   return 0.25 * (u[pos - 1] + 2.0 * u[pos] + u[pos + 1]);
