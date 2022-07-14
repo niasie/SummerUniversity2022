@@ -9,7 +9,7 @@
 #ifdef _OPENACC
 // TODO: Annotate the following function accordingly in order to be called from
 //       an OpenACC kernel context
-#pragma acc kernels
+#pragma acc routine
 #endif
 double blur(int pos, const double *u) {
   return 0.25 * (u[pos - 1] + 2.0 * u[pos] + u[pos + 1]);
@@ -69,7 +69,7 @@ void blur_twice_gpu_nocopies(double *in, double *out, int n, int nsteps) {
   double *buffer = malloc_host<double>(n);
 
 // TODO: Specify the data to be copied to and from the GPU
-#pragma acc data copy(in, out, buffer)
+#pragma acc data copy(in [0:n], out [0:n], buffer [0:n])
   {
     for (int istep = 0; istep < nsteps; ++istep) {
       int i;
