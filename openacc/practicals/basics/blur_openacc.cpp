@@ -75,13 +75,13 @@ void blur_twice_gpu_nocopies(double *in, double *out, int n, int nsteps) {
       int i;
 
 // TODO: Offload the following loop to the GPU
-#pragma acc parallel loop present(in, out)
+#pragma acc parallel loop present(in, buffer)
       for (i = 1; i < n - 1; ++i) {
         buffer[i] = blur(i, in);
       }
 
 // TODO: Offload the following loop to the GPU
-#pragma acc parallel loop present(in, out)
+#pragma acc parallel loop present(buffer, out)
       for (i = 2; i < n - 2; ++i) {
         out[i] = blur(i, buffer);
       }
