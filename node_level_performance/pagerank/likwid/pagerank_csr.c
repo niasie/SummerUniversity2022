@@ -5,6 +5,7 @@
 #include <string.h>
 #include <omp.h>
 //#include <mpi.h>
+#include <likwid-marker.h>
 #include "mmio.h"
 
 
@@ -55,6 +56,10 @@ int main(int argc, char *argv[]) {
 	char ch;
 	char line[21];
 
+	LIKWID_MARKER_INIT;
+	#pragma omp parallel
+	LIKWID_MARKER_REGISTER("SpMV");
+	
 	// Check if a filename has been specified in the command
 	if (argc < 2) {
 		printf("Missing Filename\n");
@@ -227,6 +232,8 @@ int main(int argc, char *argv[]) {
 	free(z);
 	free(c);
 
+	LIKWID_MARKER_CLOSE;
+	
 	return 0;
 }
 
@@ -268,15 +275,22 @@ void convert_matrix (int nodes, int nedges, double *G, int *indices, int *colptr
 }
 
 void spmv(int nodes, int* rowptr, int* indices, double* xs, double* G, double* x) {
-  for (int row = 0; row < nodes; row++) {
-    for (int j = rowptr[row]; j < rowptr[row + 1]; j++) {
-      x[row] += G[j] * xs[indices[j]];
+#pragma omp parallel
+  {
+    LIKWID_MARKER_START("SpMV");
+#pragma omp for
+    for (int row = 0; row < nodes; row++) {
+      for (int j = rowptr[row]; j < rowptr[row + 1]; j++) {
+	x[row] += G[j] * xs[indices[j]];
+      }
     }
+    LIKWID_MARKER_STOP("SpMV");
   }
 }
 
 double dotprod(int nodes, double* z, double* xs) {
   double sp = 0.0;
+#pragma omp parallel for reduction(+:sp)
   for (int i = 0; i < nodes; i++) {
     sp += z[i] * xs[i];
   }
@@ -285,6 +299,7 @@ double dotprod(int nodes, double* z, double* xs) {
 
 double devsq(int nodes, double* x, double* xs) {
   double ds = 0.0;
+#pragma omp parallel for reduction(+:ds)
   for (int i = 0; i < nodes; i++) {
     ds += (x[i] - xs[i]) * (x[i] - xs[i]);
     xs[i] = x[i];
@@ -293,6 +308,7 @@ double devsq(int nodes, double* x, double* xs) {
 }
 
 void nadd(int nodes, double* x, double norm) {
+#pragma omp parallel for
   for (int i = 0; i < nodes; i++) {
     x[i] = x[i] + norm;
   }
